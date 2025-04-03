@@ -1,5 +1,6 @@
 import type { ContentScriptContext } from "#imports";
 import "~/assets/tailwind.css";
+import App from "~/entrypoints/content/App.vue";
 
 export default defineContentScript({
   matches: ["*://*/*"],
@@ -13,15 +14,16 @@ export default defineContentScript({
 
 function createUi(ctx: ContentScriptContext) {
   return createShadowRootUi(ctx, {
-    name: "tailwind-shadow-root-example",
+    name: "abei-translator",
     position: "inline",
     anchor: "body",
-    append: "first",
     onMount: (uiContainer) => {
-      const p = document.createElement("p");
-      p.classList.add("text-lg", "text-red-500", "font-bold", "p-8");
-      p.textContent = "Hello from shadow root with TailwindCSS applied";
-      uiContainer.append(p);
+      const app = createApp(App);
+      app.mount(uiContainer);
+      return app;
+    },
+    onRemove: (app) => {
+      app?.unmount();
     },
   });
 }

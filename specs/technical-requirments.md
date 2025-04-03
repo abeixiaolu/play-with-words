@@ -2,7 +2,7 @@
 
 ## 1. 技术栈选择
 
-- **前端框架**：Vue 3 (使用 Composition API)
+- **前端框架**：Vue 3 (使用 Composition API)、VueUse
 - **CSS 框架**：Tailwind CSS
 - **图标库**：Heroicons
 - **浏览器扩展框架**：WXT
