@@ -12,19 +12,6 @@ filters:
     pattern: "\\.(ts|js|vue|json|md)$"
 
 actions:
-  # 开发流程指导
-  - type: suggest
-    conditions:
-      - pattern: "src/.*\\.(ts|vue)$"
-        message: |
-          WXT 开发流程建议：
-          1. 先完成 manifest 配置
-          2. 开发 popup 界面
-          3. 实现 background 逻辑
-          4. 添加 content scripts
-          5. 测试各个功能模块
-          6. 打包发布
-
   # API 使用指导
   - type: suggest
     conditions:
