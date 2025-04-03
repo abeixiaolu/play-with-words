@@ -30,7 +30,6 @@
 
 - [x] 配置WXT项目结构
 - [ ] 创建基本扩展入口（background、content script、popup）
-- [ ] 设置基础TypeScript类型
 - [ ] 配置Tailwind CSS
 - [ ] 集成Lucide图标库
 
