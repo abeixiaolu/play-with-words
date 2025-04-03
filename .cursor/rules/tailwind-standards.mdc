@@ -1,0 +1,124 @@
+---
+description: 
+globs: *.vue,*.tsx,*.jsx,*.html
+alwaysApply: false
+---
+<rule>
+name: tailwind_development_standards
+description: Tailwind CSS 开发规范和最佳实践指南
+
+filters:
+  # 匹配所有可能包含 Tailwind 类名的文件
+  - type: file_extension
+    pattern: "\\.(vue|tsx|jsx|html)$"
+  
+  # 匹配 Tailwind 配置文件
+  - type: file_name
+    pattern: "^tailwind\\.config\\.(ts|js)$"
+
+actions:
+  # 响应式设计规范
+  - type: suggest
+    conditions:
+      - pattern: "class=[\"'](mdc:(?!sm:|md:|lg:|xl:|2xl:).)*[\"']"
+        message: |
+          推荐使用响应式设计断点：
+          - sm: 640px 及以上
+          - md: 768px 及以上
+          - lg: 1024px 及以上
+          - xl: 1280px 及以上
+          - 2xl: 1536px 及以上
+          
+          示例：class="sm:flex md:grid lg:block"
+
+  # 避免过长的类名链
+  - type: warn
+    conditions:
+      - pattern: "class=[\"'][^\"']{120,}[\"']"
+        message: |
+          类名过长，建议：
+          1. 使用 @apply 指令抽取常用样式
+          2. 创建可复用的组件
+          3. 使用 Tailwind 的组合类
+
+  # 颜色使用规范
+  - type: suggest
+    conditions:
+      - pattern: "\\b(bg|text|border)-(red|blue|green|yellow|purple|pink|gray)-\\d+"
+        message: |
+          颜色使用建议：
+          1. 使用语义化的颜色变量
+          2. 在 tailwind.config 中定义主题颜色
+          3. 使用一致的色阶（50-900）
+          
+          示例：
+          ```js
+          theme: {
+            extend: {
+              colors: {
+                primary: colors.blue,
+                secondary: colors.gray,
+              }
+            }
+          }
+          ```
+
+  # 间距和尺寸规范
+  - type: suggest
+    conditions:
+      - pattern: "\\b(m|p)[trblxy]?-\\d+"
+        message: |
+          间距使用建议：
+          1. 使用一致的间距比例
+          2. 优先使用预设值（0.5、1、1.5、2、2.5、3、4...）
+          3. 避免使用自定义像素值
+          
+          示例：mt-4 而不是 mt-[17px]
+
+  # 布局最佳实践
+  - type: suggest
+    conditions:
+      - pattern: "flex|grid|absolute|fixed"
+        message: |
+          布局最佳实践：
+          1. Flex 布局：使用 flex-row/col、items-center、justify-between
+          2. Grid 布局：使用 grid-cols-{n}、gap-{size}
+          3. 定位：relative 配合 absolute
+
+  # 暗色模式支持
+  - type: suggest
+    conditions:
+      - pattern: "class=[\"'][^\"']*[\"']"
+        message: |
+          建议添加暗色模式支持：
+          使用 dark: 前缀适配暗色主题
+          示例：class="bg-white dark:bg-gray-800"
+
+  # 自定义值使用规范
+  - type: warn
+    conditions:
+      - pattern: "\\[\\d+px\\]"
+        message: "避免使用自定义像素值，优先使用 Tailwind 预设值"
+
+examples:
+  - input: |
+      <!-- 推荐的写法 -->
+      <div class="flex items-center justify-between p-4 md:p-6 bg-primary-500 dark:bg-primary-700">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">标题</h1>
+      </div>
+      
+      <!-- 不推荐的写法 -->
+      <div class="flex items-center justify-between p-[17px] bg-[#3366ff]">
+        <h1 class="text-[22px] font-bold" style="color: #333;">标题</h1>
+      </div>
+    output: "符合 Tailwind CSS 开发规范的代码"
+
+metadata:
+  priority: high
+  version: 1.0
+  tags:
+    - tailwind
+    - css
+    - responsive
+    - design-system
+</rule>

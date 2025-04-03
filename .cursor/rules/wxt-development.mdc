@@ -1,0 +1,90 @@
+---
+description: 
+globs: *.ts,*.js,*.vue,*.json
+alwaysApply: false
+---
+<rule>
+name: wxt_development_standards
+description: 规范使用 WXT 框架进行浏览器扩展开发的标准和最佳实践
+
+filters:
+  # 匹配所有 TypeScript、JavaScript、Vue 和配置文件
+  - type: file_extension
+    pattern: "\\.(ts|js|vue|json)$"
+  
+  # 匹配项目配置文件
+  - type: file_name
+    pattern: "^wxt\\.config\\.(ts|js)$"
+
+actions:
+  # 项目结构规范
+  - type: suggest
+    conditions:
+      - pattern: "^(?!src/(entries|components|utils|stores|assets)/)"
+        message: |
+          WXT 项目结构应遵循以下规范：
+          
+          src/
+          ├── entries/          # 入口文件（popup、background、content-script等）
+          ├── components/       # 可复用组件
+          ├── utils/           # 工具函数
+          ├── stores/          # 状态管理
+          └── assets/          # 静态资源
+
+  # 入口文件命名规范
+  - type: reject
+    conditions:
+      - pattern: "src/entries/(?!background|popup|content|options|sandbox).*\\.(ts|js|vue)$"
+        message: "入口文件必须使用标准命名：background、popup、content、options 或 sandbox"
+
+  # manifest 配置检查
+  - type: suggest
+    conditions:
+      - pattern: "manifest\\.config\\.(ts|js)$"
+        message: |
+          确保 manifest 配置包含必要的字段：
+          - name
+          - version
+          - manifest_version
+          - permissions
+          - host_permissions（如果需要）
+
+  # TypeScript 使用建议
+  - type: suggest
+    conditions:
+      - pattern: "\\.js$"
+        message: "建议使用 TypeScript (.ts) 来获得更好的类型支持和开发体验"
+
+  # Vue 组件规范
+  - type: suggest
+    conditions:
+      - pattern: "\\.vue$"
+        message: |
+          Vue 组件开发规范：
+          1. 使用 Composition API
+          2. 组件名使用 PascalCase
+          3. Props 必须指定类型
+          4. 使用 <script setup lang="ts"> 语法
+
+examples:
+  - input: |
+      // 正确的入口文件位置
+      src/entries/popup.vue
+      src/entries/background.ts
+      
+      // 正确的组件文件
+      src/components/FeatureCard.vue
+      
+      // 正确的工具函数
+      src/utils/storage.ts
+    output: "符合 WXT 开发规范的文件结构"
+
+metadata:
+  priority: high
+  version: 1.0
+  tags:
+    - wxt
+    - browser-extension
+    - vue
+    - typescript
+</rule>

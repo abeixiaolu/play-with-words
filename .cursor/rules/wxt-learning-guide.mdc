@@ -1,0 +1,115 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+<rule>
+name: wxt_learning_guide
+description: 指导开发者学习和使用 WXT 框架进行浏览器扩展开发
+
+filters:
+  - type: file_extension
+    pattern: "\\.(ts|js|vue|json|md)$"
+
+actions:
+  # 开发流程指导
+  - type: suggest
+    conditions:
+      - pattern: "src/.*\\.(ts|vue)$"
+        message: |
+          WXT 开发流程建议：
+          1. 先完成 manifest 配置
+          2. 开发 popup 界面
+          3. 实现 background 逻辑
+          4. 添加 content scripts
+          5. 测试各个功能模块
+          6. 打包发布
+
+  # API 使用指导
+  - type: suggest
+    conditions:
+      - pattern: "src/entries/.*\\.(ts|vue)$"
+        message: |
+          常用 WXT API 指南：
+          
+          1. 存储数据：
+          import { storage } from 'wxt/storage'
+          await storage.set('key', value)
+          
+          2. 消息通信：
+          import { browser } from 'wxt/browser'
+          browser.runtime.sendMessage()
+          
+          3. 获取扩展信息：
+          import { defineExtensionManifest } from 'wxt/manifest'
+          
+          4. 开发工具：
+          - 使用 Vue DevTools
+          - 使用 browser.storage.local 查看存储
+          - 查看 background 控制台日志
+
+  # 调试技巧
+  - type: suggest
+    conditions:
+      - pattern: "src/entries/(background|content).*\\.(ts|js)$"
+        message: |
+          调试技巧：
+          1. background：
+             - chrome://extensions
+             - 点击"检查视图"
+          
+          2. content script：
+             - 打开开发者工具
+             - 切换到 Sources 标签
+             - 在 Content Scripts 下找到文件
+          
+          3. popup：
+             - 右键点击扩展图标
+             - 选择"检查"
+
+  # 最佳实践
+  - type: suggest
+    conditions:
+      - pattern: "src/.*\\.(ts|vue)$"
+        message: |
+          WXT 开发最佳实践：
+          1. 使用 TypeScript 类型系统
+          2. 模块化设计
+          3. 使用 Vue 组合式 API
+          4. 实现优雅的错误处理
+          5. 添加适当的日志
+          6. 遵循 Chrome 扩展最佳实践
+
+  # 学习资源
+  - type: suggest
+    conditions:
+      - pattern: "README\\.md$"
+        message: |
+          推荐学习资源：
+          1. WXT 官方文档：https://wxt.dev
+          2. Chrome 扩展文档：https://developer.chrome.com/docs/extensions
+          3. Vue 3 文档：https://vuejs.org
+          4. TypeScript 文档：https://www.typescriptlang.org
+          5. 示例项目：https://github.com/wxt-dev/wxt/tree/main/examples
+
+examples:
+  - input: |
+      // 标准的 background service worker
+      src/entries/background.ts
+      
+      // Vue popup 组件
+      src/entries/popup.vue
+      
+      // 内容脚本
+      src/entries/content.ts
+    output: "遵循 WXT 开发最佳实践的文件示例"
+
+metadata:
+  priority: high
+  version: 1.0
+  tags:
+    - wxt
+    - learning
+    - browser-extension
+    - development-guide
+</rule>
