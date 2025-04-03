@@ -4,7 +4,7 @@
 
 - **前端框架**：Vue 3 (使用 Composition API)
 - **CSS 框架**：Tailwind CSS
-- **图标库**：Lucide Icons
+- **图标库**：Heroicons
 - **浏览器扩展框架**：WXT
 - **构建工具**：Vite (通过 WXT 集成)
 - **语言**：TypeScript

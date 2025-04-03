@@ -29,9 +29,9 @@
 **目标**：搭建项目基本架构，熟悉WXT框架
 
 - [x] 配置WXT项目结构
-- [ ] 创建基本扩展入口（background、content script、popup）
-- [ ] 配置Tailwind CSS
-- [ ] 集成Lucide图标库
+- [x] 创建基本扩展入口（background、content script、popup）
+- [x] 配置Tailwind CSS
+- [x] 集成 heroicons 图标库
 
 **学习要点**：WXT框架基础、浏览器扩展架构、项目配置
 
