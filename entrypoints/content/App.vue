@@ -10,17 +10,35 @@ const btnStyle = shallowRef<CSSProperties>({
   left: 0,
   top: 0,
 })
+
+// 保存按钮相对于页面的坐标
+const btnPos = reactive({
+  x: 0,
+  y: 0
+})
+
 function handleMouseUp(evt: MouseEvent) {
   selection.value = window.getSelection()?.toString().trim()
   if (selection.value?.length) {
     isShown.value = true;
-    btnStyle.value = {
-      left: evt.clientX - 12 + 'px',
-      top: evt.clientY - 12 + 'px',
-    }
+    // 保存相对于页面的坐标（而非视口坐标）
+    btnPos.x = evt.pageX - 12;
+    btnPos.y = evt.pageY - 12;
+    updateBtnPosition();
   }
 }
+
+// 更新按钮位置
+function updateBtnPosition() {
+  btnStyle.value = {
+    left: btnPos.x - window.scrollX + 'px',
+    top: btnPos.y - window.scrollY + 'px',
+  }
+}
+
 useEventListener('mouseup', useDebounceFn(handleMouseUp, 200));
+// 监听页面滚动事件，更新按钮位置
+useEventListener('scroll', useDebounceFn(updateBtnPosition, 100), { passive: true });
 
 onClickOutside(btn, () => {
   isShown.value = false;
@@ -28,12 +46,13 @@ onClickOutside(btn, () => {
 
 function handleClick(evt: MouseEvent) {
   console.log('selection.value: ', selection.value);
+  isShown.value = false;
 }
 </script>
 
 <template>
   <button @mouseup.stop="" @click="handleClick" v-if="isShown" ref="btn" :style="btnStyle" data-floating-btn="true"
-    class="cursor-pointer hover:bg-zinc-400 fixed top-4 left-4 p-1 bg-zinc-300 rounded-full">
-    <LanguageIcon class="size-5 text-zinc-800" />
+    class="cursor-pointer hover:bg-cyan-200 fixed top-4 left-4 border border-cyan-500 border-solid p-1 bg-cyan-100 rounded-full">
+    <LanguageIcon class="size-4 text-cyan-800" />
   </button>
 </template>
