@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { CSSProperties } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const props = defineProps<{
   text: string;
@@ -11,6 +12,29 @@ const props = defineProps<{
 const emit = defineEmits<{
   close: [];
 }>();
+
+// 添加翻译结果状态
+const translationResult = ref('');
+const isPartial = ref(true);
+
+// 监听翻译请求
+onMounted(() => {
+  browser.runtime.onMessage.addListener((message) => {
+    if (message.type === 'TRANSLATION_RESULT') {
+      handleTranslationResult(message.data);
+    }
+  });
+});
+
+// 处理翻译结果
+function handleTranslationResult(result: any) {
+  if (result.success) {
+    translationResult.value = result.data.translatedText;
+    isPartial.value = result.data.isPartial;
+  } else {
+    translationResult.value = '翻译失败: ' + result.error.message;
+  }
+}
 
 const popupStyle = computed<CSSProperties>(() => ({
   left: `${props.position.x}px`,
@@ -31,7 +55,7 @@ const popupStyle = computed<CSSProperties>(() => ({
     <div class="text-sm text-slate-600 dark:text-slate-300">
       <div class="mb-2">
         <div class="font-medium mb-1 text-xs text-slate-500 dark:text-slate-400">翻译</div>
-        <div><!-- 这里将来显示翻译结果 --></div>
+        <div class="min-h-[20px]">{{ translationResult || '正在翻译...' }}</div>
       </div>
       <div class="mb-2">
         <div class="font-medium mb-1 text-xs text-slate-500 dark:text-slate-400">原文</div>
@@ -41,7 +65,8 @@ const popupStyle = computed<CSSProperties>(() => ({
     </div>
 
     <div class="flex justify-end gap-2 mt-3 text-xs">
-      <button class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 rounded">
+      <button :disabled="!isPartial" :class="[isPartial ? 'cursor-not-allowed' : 'cursor-pointer']"
+        class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 rounded">
         加入生词本
       </button>
     </div>

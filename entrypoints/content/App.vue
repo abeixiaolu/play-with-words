@@ -52,6 +52,12 @@ onClickOutside(btn, () => {
 function handleClick(evt: MouseEvent) {
   console.log('selection.value: ', selection.value);
   isPopupVisible.value = true;
+  browser.runtime.sendMessage({
+    type: 'TRANSLATE',
+    text: selection.value,
+    from: 'auto',
+    to: 'zh'
+  })
 }
 
 function closePopup() {
