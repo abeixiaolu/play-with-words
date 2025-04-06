@@ -2,6 +2,7 @@
 import { LanguageIcon } from "@heroicons/vue/24/outline";
 import { onClickOutside, useDebounceFn, useEventListener } from "@vueuse/core";
 import { CSSProperties } from "vue";
+import TranslationPopup from "~/components/TranslationPopup.vue";
 
 const isShown = ref(false);
 const selection = ref<string>();
@@ -16,6 +17,9 @@ const btnPos = reactive({
   x: 0,
   y: 0
 })
+
+// 弹窗状态
+const isPopupVisible = ref(false);
 
 function handleMouseUp(evt: MouseEvent) {
   selection.value = window.getSelection()?.toString().trim()
@@ -42,17 +46,25 @@ useEventListener('scroll', useDebounceFn(updateBtnPosition, 100), { passive: tru
 
 onClickOutside(btn, () => {
   isShown.value = false;
+  isPopupVisible.value = false;
 })
 
 function handleClick(evt: MouseEvent) {
   console.log('selection.value: ', selection.value);
+  isPopupVisible.value = true;
+}
+
+function closePopup() {
+  isPopupVisible.value = false;
   isShown.value = false;
 }
 </script>
 
 <template>
   <button @mouseup.stop="" @click="handleClick" v-if="isShown" ref="btn" :style="btnStyle" data-floating-btn="true"
-    class="cursor-pointer hover:bg-cyan-200 fixed top-4 left-4 border border-cyan-500 border-solid p-1 bg-cyan-100 rounded-full">
+    class="cursor-pointer shadow hover:bg-cyan-200 fixed top-4 left-4 border border-cyan-500 border-solid p-1 bg-cyan-100 rounded-full">
     <LanguageIcon class="size-4 text-cyan-800" />
+    <TranslationPopup :visible="isPopupVisible" :text="selection || ''" :position="btnPos" @mouseup.stop
+      @close="closePopup" />
   </button>
 </template>
